@@ -2,3 +2,6 @@
 __pycache__/
 node_modules/
 *.log
+apps/agent/dist/
+*.deb
+*.exe
