@@ -1,0 +1,33 @@
+{
+    "name": "@netwall/agent",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "bin": "dist/index.js",
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "build:exe": "tsc && pkg . --targets node18-linux-x64,node18-win-x64 --out-path dist/bin"
+    },
+    "pkg": {
+        "assets": [
+            "node_modules/screenshot-desktop/**/*"
+        ]
+    },
+    "dependencies": {
+        "@trpc/client": "^10.45.0",
+        "@trpc/server": "^10.45.0",
+        "axios": "^1.6.5",
+        "dotenv": "^17.2.3",
+        "pkg": "^5.8.1",
+        "screenshot-desktop": "^1.15.3",
+        "socket.io-client": "^4.8.3",
+        "systeminformation": "^5.21.22",
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "@netwall/server": "*",
+        "@types/node": "^20.11.0",
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.3"
+    }
+}

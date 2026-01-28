@@ -1,0 +1,11 @@
+Como a instalação de serviços locais exige permissões de `sudo`, preparei um script que automatiza todo o processo de instalação e configuração do PostgreSQL, Redis e InfluxDB 2 no seu Debian.
+Por favor, execute o seguinte comando no seu terminal:
+```bash
+sudo ./setup_local_infra.sh
+```
+Este script irá:
+1. Instalar os pacotes necessários via `apt`.
+2. Configurar o PostgreSQL com o banco `netmonitor` e usuário `admin`.
+3. Adicionar o repositório oficial e instalar o InfluxDB 2.
+4. Iniciar e habilitar todos os serviços no `systemd`.
+Assim que terminar, me avise para que eu possa atualizar as configurações do Netwall para conectar nesses novos serviços locais! 

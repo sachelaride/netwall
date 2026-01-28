@@ -1,0 +1,9 @@
+A expansão do agente para Windows e Linux está concluída!
+O agente agora monitora:
+1. **Processador, Memória e Disco**: Coleta detalhada de uso por cores, partitions e RAM.
+2. **Tráfego de Rede**: Bytes enviados e recebidos em tempo real.
+3. **Tempo Online (Uptime)**: Monitora há quanto tempo o PC está ligado.
+4. **Programas Instalados**: Escaneia automaticamente a lista de programas (usando `wmic` no Windows e `dpkg` no Linux).
+**Sobre a comunicação**: O agente funciona de forma independente do scan de rede. Enquanto o scan identifica dispositivos via rede, o agente (uma vez instalado) envia dados "de dentro para fora" para o servidor via tRPC. Isso garante que o monitoramento continue mesmo se o dispositivo estiver atrás de um firewall.
+Todos os dados são persistidos: as métricas de performance vão para o **InfluxDB** (para os gráficos) e o inventário de programas vai para o **PostgreSQL**.
+Confira os detalhes no [walkthrough.md](file:///home/sachelaride/.gemini/antigravity/brain/b2b21f14-26f3-4df5-adbd-7dc723573390/walkthrough.md). 

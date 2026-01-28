@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de Dispositivo (Servidores, Roteadores, etc.)
+model Device {
+  id          String    @id @default(uuid())
+  name        String
+  model       String?
+  hostname    String?
+  ipAddress   String    @unique
+  macAddress  String?
+  type        DeviceType @default(SERVER)
+  status      DeviceStatus @default(OFFLINE)
+  department  String?
+  user        String?
+  agentId     String?   @unique // Identificador único do agente (hostname ou outro)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Métricas recentes (Snapshot)
+  lastCpuUsage    Float?
+  lastRamUsage    Float?
+  lastLatency     Float?    // Representa o ping em ms
+  lastSeen        DateTime?
+
+  // Relacionamentos para Topologia
+  parentId    String?
+  parent      Device?   @relation("DeviceHierarchy", fields: [parentId], references: [id])
+  children    Device[]  @relation("DeviceHierarchy")
+
+  alerts      Alert[]
+  software    SoftwareInventory[]
+}
+
+enum DeviceType {
+  SERVER
+  ROUTER
+  SWITCH
+  PRINTER
+  WORKSTATION
+  OTHER
+}
+
+enum DeviceStatus {
+  ONLINE
+  OFFLINE
+  WARNING
+  CRITICAL
+}
+
+// Modelo de Alertas
+model Alert {
+  id          String    @id @default(uuid())
+  title       String
+  message     String
+  severity    AlertSeverity @default(INFO)
+  status      AlertStatus   @default(ACTIVE)
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+
+  deviceId    String?
+  device      Device?   @relation(fields: [deviceId], references: [id])
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+model SoftwareInventory {
+  id        String   @id @default(uuid())
+  name      String
+  version   String?
+  vendor    String?
+  installDate DateTime?
+  createdAt DateTime @default(now())
+
+  deviceId  String
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, name])
+}
+
+model MonitoredDevice {
+  id         String   @id @default(uuid())
+  ip         String   @unique
+  community  String
+  interfaces Int[]    // Prisma supports scalar lists in PostgreSQL
+  status     String   @default("up")
+  lastScan   DateTime @default(now())
+  createdAt  DateTime @default(now())
+}
